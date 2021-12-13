@@ -434,7 +434,7 @@ def get_column_from_field(field: ModelField) -> Column:  # type: ignore
     nullable = not primary_key and _is_field_nullable(field)
     index = getattr(field.field_info, "index", Undefined)
     if index is Undefined:
-        index = primary_key or foreign_key
+        index = primary_key or foreign_key is not None
     if hasattr(field.field_info, "nullable"):
         field_nullable = getattr(field.field_info, "nullable")
         if field_nullable != Undefined:
