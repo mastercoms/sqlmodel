@@ -430,16 +430,16 @@ def get_column_from_field(field: ModelField) -> Column:  # type: ignore
         return sa_column
     sa_type = get_sqlachemy_type(field)
     primary_key = getattr(field.field_info, "primary_key", False)
+    foreign_key = getattr(field.field_info, "foreign_key", None)
     nullable = not primary_key and _is_field_nullable(field)
     index = getattr(field.field_info, "index", Undefined)
     if index is Undefined:
-        index = primary_key
+        index = primary_key or foreign_key
     if hasattr(field.field_info, "nullable"):
         field_nullable = getattr(field.field_info, "nullable")
         if field_nullable != Undefined:
             nullable = field_nullable
     args = []
-    foreign_key = getattr(field.field_info, "foreign_key", None)
     unique = getattr(field.field_info, "unique", False)
     if foreign_key:
         args.append(ForeignKey(foreign_key))
