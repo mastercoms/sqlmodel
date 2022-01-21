@@ -6,7 +6,6 @@ from decimal import Decimal
 from enum import Enum
 from pathlib import Path
 from typing import (
-    TYPE_CHECKING,
     AbstractSet,
     Any,
     Callable,
@@ -24,12 +23,12 @@ from typing import (
     cast,
 )
 
-from pydantic import BaseModel
+from pydantic import BaseConfig, BaseModel
 from pydantic.errors import ConfigError, DictError
 from pydantic.fields import SHAPE_SINGLETON
 from pydantic.fields import FieldInfo as PydanticFieldInfo
 from pydantic.fields import ModelField, Undefined, UndefinedType
-from pydantic.main import BaseConfig, ModelMetaclass, validate_model
+from pydantic.main import ModelMetaclass, validate_model
 from pydantic.typing import ForwardRef, NoArgAnyCallable, resolve_annotations
 from pydantic.utils import ROOT_KEY, Representation
 from sqlalchemy import (
@@ -432,15 +431,16 @@ def get_column_from_field(field: ModelField) -> Column:  # type: ignore
     primary_key = getattr(field.field_info, "primary_key", False)
     foreign_key = getattr(field.field_info, "foreign_key", None)
     nullable = not primary_key and _is_field_nullable(field)
+    unique = getattr(field.field_info, "unique", False)
     index = getattr(field.field_info, "index", Undefined)
     if index is Undefined:
-        index = primary_key or foreign_key is not None
+        # If the field is not unique, it is not internally indexed. FKs are a good candidate for indices.
+        index = foreign_key is not None and not unique
     if hasattr(field.field_info, "nullable"):
         field_nullable = getattr(field.field_info, "nullable")
         if field_nullable != Undefined:
             nullable = field_nullable
     args = []
-    unique = getattr(field.field_info, "unique", False)
     if foreign_key:
         args.append(ForeignKey(foreign_key))
     kwargs = {
@@ -462,7 +462,7 @@ def get_column_from_field(field: ModelField) -> Column:  # type: ignore
     sa_column_kwargs = getattr(field.field_info, "sa_column_kwargs", Undefined)
     if sa_column_kwargs is not Undefined:
         kwargs.update(cast(Dict[Any, Any], sa_column_kwargs))
-    return Column(sa_type, *args, **kwargs)
+    return Column(sa_type, *args, **kwargs)  # type: ignore
 
 
 class_registry = weakref.WeakValueDictionary()  # type: ignore
@@ -503,9 +503,6 @@ class SQLModel(BaseModel, metaclass=SQLModelMetaclass, registry=default_registry
     def __init__(__pydantic_self__, **data: Any) -> None:
         # Uses something other than `self` the first arg to allow "self" as a
         # settable attribute
-        if TYPE_CHECKING:
-            __pydantic_self__.__dict__: Dict[str, Any] = {}
-            __pydantic_self__.__fields_set__: Set[str] = set()
         values, fields_set, validation_error = validate_model(
             __pydantic_self__.__class__, data
         )
@@ -617,7 +614,7 @@ class SQLModel(BaseModel, metaclass=SQLModelMetaclass, registry=default_registry
             return cls(**value_as_dict)
 
     # From Pydantic, override to only show keys from fields, omit SQLAlchemy attributes
-    def _calculate_keys(  # type: ignore
+    def _calculate_keys(
         self,
         include: Optional[Mapping[Union[int, str], Any]],
         exclude: Optional[Mapping[Union[int, str], Any]],

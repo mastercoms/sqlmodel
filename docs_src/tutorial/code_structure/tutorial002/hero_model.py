@@ -9,9 +9,9 @@ if TYPE_CHECKING:
 
 class Hero(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    name: str
+    name: str = Field(index=True)
     secret_name: str
-    age: Optional[int] = None
+    age: Optional[int] = Field(default=None, index=True)
     experience_points: condecimal(max_digits=6, decimal_places=3) = Field(default=0, nullable=False, index=True)
 
     team_id: Optional[int] = Field(default=None, foreign_key="team.id")
