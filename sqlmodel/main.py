@@ -378,7 +378,9 @@ class SQLModelMetaclass(ModelMetaclass, DeclarativeMeta):
             DeclarativeMeta.__init__(cls, classname, bases, dict_used, **kw)
         else:
             ModelMetaclass.__init__(cls, classname, bases, dict_, **kw)
-            cls.__dict__.update(dict_)
+            for name, value in dict_.items():
+                if name not in cls.__dict__:
+                    setattr(cls, name, value)
 
 
 def get_sqlachemy_type(field: ModelField) -> Any:
