@@ -375,10 +375,8 @@ class SQLModelMetaclass(ModelMetaclass, DeclarativeMeta):
                     relationship_to, *rel_args, **rel_kwargs
                 )
                 dict_used[rel_name] = rel_value
+                setattr(cls, rel_name, rel_value)
             DeclarativeMeta.__init__(cls, classname, bases, dict_used, **kw)
-            for name, value in dict_used.items():
-                if name not in cls.__dict__:
-                    setattr(cls, name, value)
         else:
             ModelMetaclass.__init__(cls, classname, bases, dict_, **kw)
 
