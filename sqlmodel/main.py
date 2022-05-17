@@ -377,10 +377,11 @@ class SQLModelMetaclass(ModelMetaclass, DeclarativeMeta):
                 dict_used[rel_name] = rel_value
             DeclarativeMeta.__init__(cls, classname, bases, dict_used, **kw)
         else:
+            dict_used = dict_
             ModelMetaclass.__init__(cls, classname, bases, dict_, **kw)
-            for name, value in dict_.items():
-                if name not in cls.__dict__:
-                    setattr(cls, name, value)
+        for name, value in dict_used.items():
+            if name not in cls.__dict__:
+                setattr(cls, name, value)
 
 
 def get_sqlachemy_type(field: ModelField) -> Any:
