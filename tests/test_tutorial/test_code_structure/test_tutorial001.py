@@ -4,7 +4,6 @@ from sqlmodel import create_engine
 
 from ...conftest import get_testing_print_function
 
-
 expected_calls = [
     [
         "Created hero:",

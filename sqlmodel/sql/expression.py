@@ -43,7 +43,6 @@ else:
 
     class GenericSelectMeta(GenericMeta, _Select.__class__):  # type: ignore
         inherit_cache = True
-        pass
 
     class _Py36Select(_Select, Generic[_TSelect], metaclass=GenericSelectMeta):
         inherit_cache = True
