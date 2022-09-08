@@ -30,7 +30,6 @@ if sys.version_info.minor >= 7:
 
     class Select(_Select, Generic[_TSelect]):
         inherit_cache = True
-        pass
 
     # This is not comparable to sqlalchemy.sql.selectable.ScalarSelect, that has a different
     # purpose. This is the same as a normal SQLAlchemy Select class where there's only one
@@ -38,7 +37,6 @@ if sys.version_info.minor >= 7:
     # for loops on the results will feel natural.
     class SelectOfScalar(_Select, Generic[_TSelect]):
         inherit_cache = True
-        pass
 
 else:
     from typing import GenericMeta  # type: ignore
@@ -49,11 +47,9 @@ else:
 
     class _Py36Select(_Select, Generic[_TSelect], metaclass=GenericSelectMeta):
         inherit_cache = True
-        pass
 
     class _Py36SelectOfScalar(_Select, Generic[_TSelect], metaclass=GenericSelectMeta):
         inherit_cache = True
-        pass
 
     # Cast them for editors to work correctly, from several tricks tried, this works
     # for both VS Code and PyCharm
