@@ -1,6 +1,6 @@
-from pydantic import condecimal
 from typing import TYPE_CHECKING, Optional
 
+from pydantic import condecimal
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:

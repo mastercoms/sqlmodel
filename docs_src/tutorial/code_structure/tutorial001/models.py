@@ -1,6 +1,6 @@
-from pydantic import condecimal
 from typing import List, Optional
 
+from pydantic import condecimal
 from sqlmodel import Field, Relationship, SQLModel
 
 

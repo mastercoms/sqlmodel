@@ -80,12 +80,6 @@ Running an asynchronous function (python3.7+)
 {!./docs_src/advanced/asyncio/tutorial001.py[ln:53-55]!}
 ```
 
-Running an asynchronous function (python3.6)
-
-```Python
-{!./docs_src/advanced/asyncio/tutorial001_py36.py[ln:53-56]!}
-```
-
 Full example.
 
 ```Python
