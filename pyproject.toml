@@ -53,6 +53,8 @@ isort = "^5.9.3"
 async_generator = {version = "*", python = "~3.6"}
 async-exit-stack = {version = "*", python = "~3.6"}
 
+aiosqlite = "^0.17"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
