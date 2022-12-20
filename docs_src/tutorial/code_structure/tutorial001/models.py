@@ -17,7 +17,9 @@ class Hero(SQLModel, table=True):
     name: str = Field(index=True)
     secret_name: str
     age: Optional[int] = Field(default=None, index=True)
-    experience_points: condecimal(max_digits=6, decimal_places=3) = Field(default=0, nullable=False, index=True)
+    experience_points: condecimal(max_digits=6, decimal_places=3) = Field(
+        default=0, nullable=False, index=True
+    )
 
     team_id: Optional[int] = Field(default=None, foreign_key="team.id")
     team: Optional[Team] = Relationship(back_populates="heroes")
