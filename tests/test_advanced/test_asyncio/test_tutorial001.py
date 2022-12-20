@@ -1,5 +1,4 @@
 import asyncio
-import sys
 from typing import Any, Dict, List, Union
 from unittest.mock import patch
 
