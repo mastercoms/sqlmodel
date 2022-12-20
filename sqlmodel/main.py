@@ -41,7 +41,6 @@ from sqlalchemy.orm.decl_api import DeclarativeMeta
 from sqlalchemy.orm.instrumentation import is_instrumented
 from sqlalchemy.sql.schema import MetaData
 from sqlalchemy.sql.sqltypes import LargeBinary, Time
-from sqlalchemy.sql.sqltypes import Enum as _Enum
 
 from .sql.sqltypes import GUID, AutoString
 
