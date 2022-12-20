@@ -1,17 +1,17 @@
-from typing import Any, Mapping, Optional, Sequence, TypeVar, Union, overload
+from typing import Any, Mapping, Optional, Sequence, TypeVar, Union
 
 from sqlalchemy import util
 from sqlalchemy.ext.asyncio import AsyncSession as _AsyncSession
 from sqlalchemy.ext.asyncio import engine
 from sqlalchemy.ext.asyncio.engine import AsyncConnection, AsyncEngine
 from sqlalchemy.util.concurrency import greenlet_spawn
+from sqlmodel.sql.base import Executable
 
-from ...engine.result import Result, ScalarResult
+from ...engine.result import ScalarResult
 from ...orm.session import Session
-from ...sql.base import Executable
-from ...sql.expression import Select, SelectOfScalar
+from ...sql.expression import Select
 
-_TSelectParam = TypeVar("_TSelectParam")
+_T = TypeVar("_T")
 
 
 class AsyncSession(_AsyncSession):
@@ -40,46 +40,14 @@ class AsyncSession(_AsyncSession):
             Session(bind=bind, binds=binds, **kw)  # type: ignore
         )
 
-    @overload
     async def exec(
         self,
-        statement: Select[_TSelectParam],
-        *,
-        params: Optional[Union[Mapping[str, Any], Sequence[Mapping[str, Any]]]] = None,
-        execution_options: Mapping[str, Any] = util.EMPTY_DICT,
-        bind_arguments: Optional[Mapping[str, Any]] = None,
-        _parent_execute_state: Optional[Any] = None,
-        _add_event: Optional[Any] = None,
-        **kw: Any,
-    ) -> Result[_TSelectParam]:
-        ...
-
-    @overload
-    async def exec(
-        self,
-        statement: SelectOfScalar[_TSelectParam],
-        *,
-        params: Optional[Union[Mapping[str, Any], Sequence[Mapping[str, Any]]]] = None,
-        execution_options: Mapping[str, Any] = util.EMPTY_DICT,
-        bind_arguments: Optional[Mapping[str, Any]] = None,
-        _parent_execute_state: Optional[Any] = None,
-        _add_event: Optional[Any] = None,
-        **kw: Any,
-    ) -> ScalarResult[_TSelectParam]:
-        ...
-
-    async def exec(
-        self,
-        statement: Union[
-            Select[_TSelectParam],
-            SelectOfScalar[_TSelectParam],
-            Executable[_TSelectParam],
-        ],
+        statement: Union[Select[_T], Executable[_T]],
         params: Optional[Union[Mapping[str, Any], Sequence[Mapping[str, Any]]]] = None,
         execution_options: Mapping[Any, Any] = util.EMPTY_DICT,
         bind_arguments: Optional[Mapping[str, Any]] = None,
         **kw: Any,
-    ) -> ScalarResult[_TSelectParam]:
+    ) -> ScalarResult[_T]:
         # TODO: the documentation says execution_options accepts a dict, but only
         # util.immutabledict has the union() method. Is this a bug in SQLAlchemy?
         execution_options = execution_options.union({"prebuffer_rows": True})  # type: ignore
@@ -92,7 +60,3 @@ class AsyncSession(_AsyncSession):
             bind_arguments=bind_arguments,
             **kw,
         )
-
-    async def __aenter__(self) -> "AsyncSession":
-        # PyCharm does not understand TypeVar here :/
-        return await super().__aenter__()
