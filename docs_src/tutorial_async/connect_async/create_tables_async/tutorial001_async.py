@@ -1,7 +1,7 @@
 import asyncio
 from typing import Annotated, Optional
 
-from sqlmodel import create_async_engine, Field, SQLModel
+from sqlmodel import Field, SQLModel, create_async_engine
 
 
 class Team(SQLModel, table=True):

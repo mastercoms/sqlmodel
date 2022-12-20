@@ -1,7 +1,7 @@
 import asyncio
 from typing import Annotated, Optional
 
-from sqlmodel import AsyncSession, create_async_engine, Field, SQLModel, select
+from sqlmodel import AsyncSession, Field, SQLModel, create_async_engine, select
 
 
 class Hero(SQLModel, table=True):  # (2)
