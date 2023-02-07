@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sqlmodel"
-version = "0"
+version = "0.0.9-a.5"
 description = "SQLModel, SQL databases in Python, designed for simplicity, compatibility, and robustness."
 authors = ["Sebastián Ramírez <tiangolo@gmail.com>"]
 readme = "README.md"
@@ -50,15 +50,12 @@ httpx = "^0.23.1"
 autoflake = "^2.0.0"
 isort = "^5.11.3"
 pytest-asyncio = "^0.19.0"
-SQLAlchemy = {extras = ["asyncio"], version = "^1.4.41"}
+SQLAlchemy = {extras = ["asyncio"], version = ">=1.4.46,<=1.5.0"}
 aiosqlite = "^0.17.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.poetry-version-plugin]
-source = "init"
 
 [tool.coverage.run]
 parallel = true

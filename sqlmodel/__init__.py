@@ -1,4 +1,4 @@
-__version__ = "0.0.9-a.3"
+import importlib.metadata
 
 # Re-export from SQLAlchemy
 from sqlalchemy.engine import create_mock_engine as create_mock_engine
@@ -141,3 +141,5 @@ from .sql.sqltypes import AutoString as AutoString
 from .main import SQLModel as SQLModel
 from .main import Field as Field
 from .main import Relationship as Relationship
+
+__version__ = importlib.metadata.version("sqlmodel")
